@@ -10,29 +10,29 @@ function Main:enteredState()
   self.attackers = {}
 
   self.bank = 10
-  self.tower_hp = 10
+  self.attacker_hp = 10
   self.active_tower = Game.TOWER_HASH["1"]
 
   cron.every(2, function()
-    local new_attacker = Attacker:new(Attacker.PATHS[2], game.tower_hp)
+    local new_attacker = Attacker:new(Attacker.PATHS[2], game.attacker_hp)
     table.insert(self.attackers, new_attacker)
     new_attacker.index = #self.attackers
   end)
   cron.after(15, function()
     cron.every(2, function()
-      local new_attacker = Attacker:new(Attacker.PATHS[1], game.tower_hp)
+      local new_attacker = Attacker:new(Attacker.PATHS[1], game.attacker_hp)
       table.insert(self.attackers, new_attacker)
       new_attacker.index = #self.attackers
     end)
   end)
   cron.after(30, function()
     cron.every(2, function()
-      local new_attacker = Attacker:new(Attacker.PATHS[3], game.tower_hp)
+      local new_attacker = Attacker:new(Attacker.PATHS[3], game.attacker_hp)
       table.insert(self.attackers, new_attacker)
       new_attacker.index = #self.attackers
     end)
   end)
-  cron.every(25, function() game.tower_hp = game.tower_hp + 5 end)
+  cron.every(25, function() game.attacker_hp = game.attacker_hp + 5 end)
 
   self:create_bounds()
 end
