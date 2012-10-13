@@ -1,4 +1,7 @@
 local Main = Game:addState('Main')
+Game.static.TOWER_HASH = {}
+Game.static.TOWER_HASH["1"] = Tower
+Game.static.TOWER_HASH["2"] = ShotgunTower
 
 function Main:enteredState()
   self.collider = HC(50, self.on_start_collide, self.on_stop_collide)
@@ -8,6 +11,7 @@ function Main:enteredState()
 
   self.bank = 10
   self.tower_hp = 10
+  self.active_tower = Game.TOWER_HASH["1"]
 
   cron.every(2, function()
     local new_attacker = Attacker:new(Attacker.PATHS[2], game.tower_hp)
@@ -55,6 +59,7 @@ function Main:render()
   camera:set()
   g.setColor(255,255,255)
   g.print("Bank: " .. self.bank, 0, 0)
+  g.print("Tower: " .. self.active_tower.name, 100, 0)
 
   for id,tower in pairs(self.towers) do
     tower:render()
@@ -73,7 +78,7 @@ end
 
 function Main:mousepressed(x, y, button)
   if self.bank >= Tower.COST then
-    local new_tower = Tower:new(x, y)
+    local new_tower = self.active_tower:new(x, y)
     self.towers[new_tower.id] = new_tower
   end
 end
@@ -82,6 +87,9 @@ function Main:mousereleased(x, y, button)
 end
 
 function Main:keypressed(key, unicode)
+  if Game.TOWER_HASH[key] then
+    self.active_tower = Game.TOWER_HASH[key]
+  end
 end
 
 function Main:keyreleased(key, unicode)

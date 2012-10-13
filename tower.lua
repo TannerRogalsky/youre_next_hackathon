@@ -9,6 +9,7 @@ function Tower:initialize(x, y)
   self.radius = 25
   self.angle = 0
   self.damage = 5
+  self.color = {r = 255, g = 255, b = 255}
   self.jobs = {}
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
@@ -30,7 +31,7 @@ function Tower:update(dt)
 end
 
 function Tower:render()
-  g.setColor(255,255,255)
+  g.setColor(self.color.r, self.color.g, self.color.b)
   g.circle("fill", self.pos.x, self.pos.y, self.radius)
 
   g.setColor(0,0,0,255)

@@ -24,6 +24,7 @@ cron = require 'lib/cron'
 require 'base'
 require 'game'
 require 'tower'
+require 'shotgun_tower'
 require 'attacker'
 require 'bullet'
 
