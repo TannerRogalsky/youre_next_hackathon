@@ -12,6 +12,7 @@ function Main:enteredState()
 
   self.mutalisk = g.newImage("images/mutalisk.png")
   self.photon = g.newImage("images/bullet.png")
+  self.metal = g.newImage("images/metal1.jpg")
   self.background = g.newImage("images/stars1.jpg")
   self.background:setWrap("repeat", "repeat")
   local ww,wh,iw,ih = g.getWidth(), g.getHeight(), self.background:getWidth(), self.background:getHeight()
@@ -203,20 +204,59 @@ function Main:create_terrain()
   local terrain
 
   local terrain_render = function(self)
-    g.setColor(0, 255, 0, 150)
-    self:draw("fill")
-    g.setColor(0, 255, 0, 255)
+    g.setColor(255, 255, 255)
+    love.graphics.draw(self.texture, 0, 0)
+    g.setColor(0, 0, 0, 255)
     self:draw("line")
   end
 
   terrain = self.collider:addPolygon(20,0, 650,0, 325,300)
   self.collider:setGhost(terrain)
+  local x1,y1, x2,y2 = terrain:bbox()
+  terrain.texture = self.newTexturedPolygon({terrain._polygon:unpack()}, self.metal, x2, y2)
   terrain.render = terrain_render
   table.insert(self.terrain, terrain)
   terrain = self.collider:addPolygon(20,h, 650,h, 325,h-300)
   self.collider:setGhost(terrain)
+  x1,y1, x2,y2 = terrain:bbox()
+  terrain.texture = self.newTexturedPolygon({terrain._polygon:unpack()}, self.metal, x2, y2)
   terrain.render = terrain_render
   table.insert(self.terrain, terrain)
+end
+
+function Main.newTexturedPolygon(vertices, img, max_x, max_y)
+  -- We want our images to tile
+  img:setWrap("repeat", "repeat")
+
+  -- We need a quad so the img is repeated
+  -- The quad width/height should be the max x/y of the poly
+  local quad = love.graphics.newQuad(0, 0, max_x, max_y, img:getWidth(), img:getHeight())
+
+  -- Set up and store our clipped canvas once as it's expensive
+  local canvas = love.graphics.newCanvas()
+
+  love.graphics.setCanvas(canvas)
+
+  -- Our clipping function, we want to render within a polygon shape
+  local myStencilFunction = function()
+    love.graphics.polygon("fill", unpack(vertices))
+  end
+  love.graphics.setStencil(myStencilFunction)
+
+  -- Setting to premultiplied means that pixels just get overlaid ignoring
+  -- their alpha values. Then when we render this canvas object itself, we
+  -- will use the alpha of the canvas itself
+  love.graphics.setBlendMode("premultiplied")
+
+  -- Draw the repeating image within the quad
+  love.graphics.drawq(img, quad, 0, 0)
+
+  -- Reset everything back to normal
+  love.graphics.setBlendMode("alpha")
+  love.graphics.setStencil()
+  love.graphics.setCanvas()
+
+  return canvas
 end
 
 return Main
