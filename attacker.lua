@@ -1,6 +1,12 @@
 Attacker = class('Attacker', Base)
 Attacker.static.PATHS = {
   [1] = function(self, dt) return dt * self.speed, dt * self.speed end,
+  [2] = function(self, dt)
+    local x, y
+    x = dt * self.speed
+    y = math.sin(dt) * (self.speed * 2) + g.getHeight() / 2
+    return x, y
+  end,
 }
 
 function Attacker:initialize(path, hp)
@@ -10,7 +16,7 @@ function Attacker:initialize(path, hp)
   self.pos.incr = function(self, k, v) self[k] = self[k] + v end
 
   self.radius = 15
-  self.time_alive = 5
+  self.time_alive = -1
   self.path = path
   self.speed = 20
   self.hp = hp

@@ -7,7 +7,7 @@ function Main:enteredState()
   self.attackers = {}
 
   cron.every(2, function()
-    local new_attacker = Attacker:new(Attacker.PATHS[1], 10)
+    local new_attacker = Attacker:new(Attacker.PATHS[2], 10)
     table.insert(self.attackers, new_attacker)
     new_attacker.index = #self.attackers
   end)
