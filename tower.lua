@@ -12,12 +12,15 @@ function Tower:initialize(x, y)
   self.color = {r = 255, g = 255, b = 255}
   self.jobs = {}
 
+  self.anim = newAnimation(game.cannon, 71, 71, 2/9, 9)
+
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self
   game.collider:addToGroup("towers_and_bullets", self._physics_body)
 
   local new_job = cron.every(2, function()
     self:shoot(self.angle)
+    self.anim:seek(4)
   end)
   self.jobs[new_job] = true
 
@@ -28,16 +31,19 @@ function Tower:update(dt)
   local target = game.attackers[1]
   if target == nil then return end
   self.angle = math.atan2(target.pos.y - self.pos.y, target.pos.x - self.pos.x)
+
+  self.anim:update(dt)
 end
 
 function Tower:render()
   g.setColor(self.color.r, self.color.g, self.color.b)
-  g.circle("fill", self.pos.x, self.pos.y, self.radius)
+  self.anim:draw(self.pos.x - 71/2, self.pos.y - 71/2)
+  -- g.circle("fill", self.pos.x, self.pos.y, self.radius)
 
-  g.setColor(0,0,0,255)
-  local x = self.pos.x + self.radius * math.cos(self.angle)
-  local y = self.pos.y + self.radius * math.sin(self.angle)
-  g.line(self.pos.x, self.pos.y, x, y)
+  -- g.setColor(0,0,0,255)
+  -- local x = self.pos.x + self.radius * math.cos(self.angle)
+  -- local y = self.pos.y + self.radius * math.sin(self.angle)
+  -- g.line(self.pos.x, self.pos.y, x, y)
 end
 
 function Tower:shoot(angle)
