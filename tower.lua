@@ -7,14 +7,16 @@ function Tower:initialize(x, y)
   self.spread = 0
   self.radius = 25
   self.angle = 0
+  self.jobs = {}
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self
   game.collider:addToGroup("towers_and_bullets", self._physics_body)
 
-  cron.every(2, function()
+  local new_job = cron.every(2, function()
     self:shoot(self.angle)
   end)
+  self.jobs[new_job] = true
 end
 
 function Tower:update(dt)
@@ -40,4 +42,16 @@ function Tower:shoot(angle)
   local y = self.pos.y + self.radius * math.sin(angle_of_attack)
   local bullet = Bullet:new({x = x, y = y}, angle_of_attack, 3)
   game.bullets[bullet.id] = bullet
+end
+
+function Tower:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  local other_object = shape_two.parent
+
+  if instanceOf(Attacker, other_object) then
+    game.collider:remove(shape_one)
+    game.towers[self.id] = nil
+    for job,active in pairs(self.jobs) do
+      cron.cancel(job)
+    end
+  end
 end

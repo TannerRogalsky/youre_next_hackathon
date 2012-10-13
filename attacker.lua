@@ -1,6 +1,6 @@
 Attacker = class('Attacker', Base)
 Attacker.static.PATHS = {
-  [1] = function(self, dt) return dt * self.speed, dt * self.speed end
+  [1] = function(self, dt) return dt * self.speed, dt * self.speed end,
 }
 
 function Attacker:initialize(path, hp)
