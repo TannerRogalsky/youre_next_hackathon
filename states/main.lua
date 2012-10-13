@@ -120,12 +120,14 @@ function Main:mousepressed(x, y, button)
     end
 
     local collides_with_other = false
+    local existing_tower
     for id,tower in pairs(self.towers) do
       local dist = math.sqrt(math.pow(tower.pos.x - x, 2) + math.pow(tower.pos.y - y, 2))
       if dist > 25 + 25 then
         collides_with_other = false
       else
         collides_with_other = true
+        existing_tower = tower
         break
       end
     end
@@ -133,6 +135,10 @@ function Main:mousepressed(x, y, button)
     if on_terrain and not collides_with_other then
       local new_tower = self.active_tower:new(x, y)
       self.towers[new_tower.id] = new_tower
+    elseif on_terrain and collides_with_other then
+      if self.bank >= Tower.COST * existing_tower.upgrade_level then
+        existing_tower:upgrade()
+      end
     end
   end
 end

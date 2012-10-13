@@ -1,5 +1,12 @@
 Tower = class('Tower', Base)
 Tower.static.COST = 5
+Tower.static.COLOR_MAP = {
+  [1] = "WHITE",
+  [2] = "RED",
+  [3] = "BLUE",
+  [4] = "GREEN",
+  [5] = "PURPLE",
+}
 
 function Tower:initialize(x, y)
   Base.initialize(self)
@@ -8,9 +15,10 @@ function Tower:initialize(x, y)
   self.spread = 0
   self.radius = 25
   self.angle = 0
-  self.damage = 5
-  self.color = {r = 255, g = 255, b = 255}
   self.jobs = {}
+  self.upgrade_level = 1
+  self.color = COLORS[Tower.COLOR_MAP[self.upgrade_level]]
+  self.damage = 5 * self.upgrade_level
 
   self.anim = newAnimation(game.preloaded_image["cannon.png"], 71, 71, 2/9, 9)
 
@@ -24,7 +32,7 @@ function Tower:initialize(x, y)
   end)
   self.jobs[new_job] = true
 
-  game.bank = game.bank - Tower.COST
+  game.bank = game.bank - Tower.COST * self.upgrade_level
 end
 
 function Tower:update(dt)
@@ -53,6 +61,15 @@ function Tower:shoot(angle)
   local y = self.pos.y + self.radius * math.sin(angle_of_attack)
   local bullet = Bullet:new({x = x, y = y}, angle_of_attack, self.damage)
   game.bullets[bullet.id] = bullet
+end
+
+function Tower:upgrade()
+  if self.upgrade_level < 5 then
+    game.bank = game.bank - Tower.COST * self.upgrade_level
+    self.upgrade_level = self.upgrade_level + 1
+    self.color = COLORS[Tower.COLOR_MAP[self.upgrade_level]]
+    self.damage = 5 * self.upgrade_level
+  end
 end
 
 function Tower:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)

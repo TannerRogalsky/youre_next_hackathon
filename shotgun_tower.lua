@@ -3,7 +3,7 @@ ShotgunTower = class('ShotgunTower', Tower)
 function ShotgunTower:initialize(x, y)
   Tower.initialize(self, x, y)
 
-  self.color = {r = 255, g = 255, b = 0}
+  self.color = COLORS.BLUE
   self.spread = 20
   self.damage = 3
 

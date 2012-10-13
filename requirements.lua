@@ -2,6 +2,15 @@
 g = love.graphics
 GRAVITY = 700
 math.tau = math.pi * 2
+COLORS = {
+  RED = {r = 255, g = 0, b = 0},
+  GREEN = {r = 0, g = 255, b = 0},
+  BLUE = {r = 0, g = 0, b = 255},
+  WHITE = {r = 255, g = 255, b = 255},
+  BLACK = {r = 0, g = 0, b = 0},
+  YELLOW = {r = 0, g = 255, b = 255},
+  PURPLE = {r = 255, g = 0, b = 255},
+}
 
 -- The pixel grid is actually offset to the center of each pixel. So to get clean pixels drawn use 0.5 + integer increments.
 g.setPoint(2.5, "rough")
