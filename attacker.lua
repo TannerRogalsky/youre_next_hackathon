@@ -22,7 +22,7 @@ function Attacker:initialize(path, hp)
   self.speed = 20
   self.hp = hp
   self.worth = 1
-  self.anim = newAnimation(game.mutalisk, 60, 60, 0.2, 5)
+  self.anim = newAnimation(game.preloaded_image["mutalisk.png"], 60, 60, 0.2, 5)
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self

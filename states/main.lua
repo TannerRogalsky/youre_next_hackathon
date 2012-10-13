@@ -10,11 +10,8 @@ function Main:enteredState()
   self.attackers = {}
   self.terrain = {}
 
-  self.mutalisk = g.newImage("images/mutalisk.png")
-  self.cannon = g.newImage("images/cannon.png")
-  self.photon = g.newImage("images/bullet.png")
-  self.metal = g.newImage("images/metal1.jpg")
-  self.background = g.newImage("images/stars2.jpg")
+  self.metal = self.preloaded_image["metal1.jpg"]
+  self.background = self.preloaded_image["stars2.jpg"]
   self.background:setWrap("repeat", "repeat")
   local ww,wh,iw,ih = g.getWidth(), g.getHeight(), self.background:getWidth(), self.background:getHeight()
   self.bg_quad = love.graphics.newQuad(0, 0, ww, wh, iw, ih)

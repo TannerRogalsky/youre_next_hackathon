@@ -9,6 +9,7 @@ function Bullet:initialize(origin, angle, damage)
   self.angle = angle
   self.speed = 15
   self.damage = damage
+  self.image = game.preloaded_image["bullet.png"]
 
   self._physics_body = game.collider:addPoint(self.pos.x, self.pos.y)
   self._physics_body.parent = self
@@ -23,7 +24,7 @@ end
 
 function Bullet:render()
   g.setColor(255,255,255)
-  g.draw(game.photon, self.pos.x - 9, self.pos.y - 9)
+  g.draw(self.image, self.pos.x - 9, self.pos.y - 9)
   -- g.setColor(0,255,0)
   -- g.circle("fill", self.pos.x, self.pos.y, self.radius)
 

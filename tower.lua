@@ -12,7 +12,7 @@ function Tower:initialize(x, y)
   self.color = {r = 255, g = 255, b = 255}
   self.jobs = {}
 
-  self.anim = newAnimation(game.cannon, 71, 71, 2/9, 9)
+  self.anim = newAnimation(game.preloaded_image["cannon.png"], 71, 71, 2/9, 9)
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self
