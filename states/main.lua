@@ -8,6 +8,7 @@ function Main:enteredState()
   self.towers = {}
   self.bullets = {}
   self.attackers = {}
+  self.terrain = {}
 
   self.bank = 10
   self.attacker_hp = 10
@@ -35,6 +36,7 @@ function Main:enteredState()
   cron.every(25, function() game.attacker_hp = game.attacker_hp + 5 end)
 
   self:create_bounds()
+  self:create_terrain()
 end
 
 function Main:update(dt)
@@ -57,9 +59,10 @@ end
 
 function Main:render()
   camera:set()
-  g.setColor(255,255,255)
-  g.print("Bank: " .. self.bank, 0, 0)
-  g.print("Tower: " .. self.active_tower.name, 100, 0)
+
+  for _,terrain in ipairs(self.terrain) do
+    terrain:render()
+  end
 
   for id,tower in pairs(self.towers) do
     tower:render()
@@ -172,6 +175,27 @@ function Main:create_bounds(padding, collision_callback)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.parent.on_collide = boundary_collision
+end
+
+function Main:create_terrain()
+  local w,h = g.getWidth(), g.getHeight()
+  local terrain
+
+  local terrain_render = function(self)
+    g.setColor(0, 255, 0, 150)
+    self:draw("fill")
+    g.setColor(0, 255, 0, 255)
+    self:draw("line")
+  end
+
+  terrain = self.collider:addPolygon(20,0, 650,0, 325,300)
+  self.collider:setGhost(terrain)
+  terrain.render = terrain_render
+  table.insert(self.terrain, terrain)
+  terrain = self.collider:addPolygon(20,h, 650,h, 325,h-300)
+  self.collider:setGhost(terrain)
+  terrain.render = terrain_render
+  table.insert(self.terrain, terrain)
 end
 
 return Main
