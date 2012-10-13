@@ -6,6 +6,9 @@ function Game:initialize()
   local Camera = require 'lib/camera'
   camera = Camera:new()
 
+  self.font = g.newFont(16)
+  g.setFont(self.font)
+
   self:gotoState("Main")
 end
 

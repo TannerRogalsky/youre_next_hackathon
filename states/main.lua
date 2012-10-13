@@ -73,13 +73,28 @@ function Main:render()
     attackers:render()
   end
 
+  g.setColor(255,255,255)
+  g.print("Bank: " .. self.bank, 0, 0)
+  g.print("Tower: " .. self.active_tower.name, 100, 0)
+
   camera:unset()
 end
 
 function Main:mousepressed(x, y, button)
   if self.bank >= Tower.COST then
-    local new_tower = self.active_tower:new(x, y)
-    self.towers[new_tower.id] = new_tower
+
+    local on_terrain = false
+    for _,terrain in ipairs(self.terrain) do
+      if terrain:contains(x,y) then
+        on_terrain = true
+        break
+      end
+    end
+
+    if on_terrain then
+      local new_tower = self.active_tower:new(x, y)
+      self.towers[new_tower.id] = new_tower
+    end
   end
 end
 

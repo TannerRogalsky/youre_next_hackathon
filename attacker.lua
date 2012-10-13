@@ -39,7 +39,8 @@ function Attacker:render()
   g.circle("fill", self.pos.x, self.pos.y, self.radius)
 
   g.setColor(0,0,0,255)
-  g.print(self.hp, self.pos.x - 10, self.pos.y - 10)
+  local offset = game.font:getWidth(self.hp) / 2
+  g.print(self.hp, self.pos.x - offset, self.pos.y - 10)
 
   -- g.setColor(0,0,0,255)
   -- local x = self.pos.x + self.radius * math.cos(self.angle)
