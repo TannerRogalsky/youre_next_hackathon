@@ -10,6 +10,8 @@ function Main:enteredState()
   self.attackers = {}
   self.terrain = {}
 
+  self.mutalisk = g.newImage("images/mutalisk.png")
+
   self.bank = 10
   self.attacker_hp = 10
   self.active_tower = Game.TOWER_HASH["1"]

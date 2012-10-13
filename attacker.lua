@@ -22,6 +22,7 @@ function Attacker:initialize(path, hp)
   self.speed = 20
   self.hp = hp
   self.worth = 1
+  self.anim = newAnimation(game.mutalisk, 60, 60, 0.2, 5)
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self
@@ -32,15 +33,19 @@ function Attacker:update(dt)
   self.time_alive = self.time_alive + dt
   local new_x, new_y = self:path(self.time_alive)
   self:move_to(new_x, new_y)
+
+  self.anim:update(dt)
 end
 
 function Attacker:render()
-  g.setColor(0,255,255)
-  g.circle("fill", self.pos.x, self.pos.y, self.radius)
+  g.setColor(255,255,255)
+  self.anim:draw(self.pos.x - 30, self.pos.y - 30)
+  -- g.setColor(0,255,255)
+  -- g.circle("fill", self.pos.x, self.pos.y, self.radius)
 
-  g.setColor(0,0,0,255)
-  local offset = game.font:getWidth(self.hp) / 2
-  g.print(self.hp, self.pos.x - offset, self.pos.y - 10)
+  -- g.setColor(0,0,0,255)
+  -- local offset = game.font:getWidth(self.hp) / 2
+  -- g.print(self.hp, self.pos.x - offset, self.pos.y - 10)
 
   -- g.setColor(0,0,0,255)
   -- local x = self.pos.x + self.radius * math.cos(self.angle)
