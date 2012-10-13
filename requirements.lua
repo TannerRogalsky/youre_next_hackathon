@@ -26,6 +26,7 @@ require 'game'
 require 'tower'
 require 'shotgun_tower'
 require 'attacker'
+require 'boss'
 require 'bullet'
 
 require 'states/loading'

@@ -8,6 +8,8 @@ Attacker.static.PATHS = {
     return x, y
   end,
   [3] = function(self, dt) return dt * self.speed, g.getHeight() - dt * self.speed end,
+  [4] = function(self, dt) return dt * self.speed, dt * self.speed / 2 + g.getHeight() / 4 end,
+  [5] = function(self, dt) return dt * self.speed, g.getHeight() / 4 * 3 - dt * self.speed / 2 end,
 }
 
 function Attacker:initialize(path, hp)

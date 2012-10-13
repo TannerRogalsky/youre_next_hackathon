@@ -18,6 +18,7 @@ function Main:enteredState()
 
   self.bank = 10
   self.attacker_hp = 10
+  self.boss_hp = 50
   self.active_tower = Game.TOWER_HASH["1"]
 
   cron.every(2, function()
@@ -40,6 +41,11 @@ function Main:enteredState()
     end)
   end)
   cron.every(25, function() game.attacker_hp = game.attacker_hp + 5 end)
+  cron.every(5, function()
+    local new_attacker = Boss:new(Attacker.PATHS[math.random(4,5)], game.boss_hp)
+    table.insert(self.attackers, new_attacker)
+    new_attacker.index = #self.attackers
+  end)
 
   self:create_bounds(50)
   self:create_terrain()
