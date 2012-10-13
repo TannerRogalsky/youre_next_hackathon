@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.title = "youre_next_hackathon"        -- The title of the window the game is in (string)
+    t.title = "Photonic Defense"        -- The title of the window the game is in (string)
     t.author = "Tanner Rogalsky"        -- The author of the game (string)
     t.identity = "youre_next_hackathon"            -- The name of the save directory (string)
     t.version = "0.8.0"         -- The LÖVE version this game was made for (string)
