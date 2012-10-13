@@ -14,7 +14,7 @@ function Main:enteredState()
   self.cannon = g.newImage("images/cannon.png")
   self.photon = g.newImage("images/bullet.png")
   self.metal = g.newImage("images/metal1.jpg")
-  self.background = g.newImage("images/stars1.jpg")
+  self.background = g.newImage("images/stars2.jpg")
   self.background:setWrap("repeat", "repeat")
   local ww,wh,iw,ih = g.getWidth(), g.getHeight(), self.background:getWidth(), self.background:getHeight()
   self.bg_quad = love.graphics.newQuad(0, 0, ww, wh, iw, ih)
@@ -44,11 +44,12 @@ function Main:enteredState()
   end)
   cron.every(25, function() game.attacker_hp = game.attacker_hp + 5 end)
 
-  self:create_bounds()
+  self:create_bounds(50)
   self:create_terrain()
 end
 
 function Main:update(dt)
+  if game.over then return end
   cron.update(dt)
   self.collider:update(dt)
 
@@ -91,6 +92,15 @@ function Main:render()
   g.setColor(255,255,255)
   g.print("Bank: " .. self.bank, 0, 0)
   g.print("Tower: " .. self.active_tower.name, 100, 0)
+
+  if game.over then
+      g.setColor(0,0,0,255/2)
+      g.rectangle('fill', 0,0,g.getWidth(), g.getHeight())
+      g.setColor(255,255,255,255)
+      local text = "You lost."
+      local offset = self.font:getWidth(text) / 2
+      g.print(text, g.getWidth() / 2 - offset, g.getHeight() / 2)
+  end
 
   camera:unset()
 end
@@ -168,7 +178,7 @@ function Main.on_stop_collide(dt, shape_one, shape_two)
 end
 
 function Main:create_bounds(padding, collision_callback)
-  padding = padding or 50
+  padding = padding or 0
   local boundary_collision = collision_callback or function(self, dt, shape_one, shape_two, mtv_x, mtv_y)
     -- self is the boundary object (not the physics object)
     local other_object = shape_two.parent
@@ -179,22 +189,22 @@ function Main:create_bounds(padding, collision_callback)
     end
   end
 
-  local bound = self.collider:addRectangle(-padding, -padding, g.getWidth() + padding * 2, 50)
+  local bound = self.collider:addRectangle(-padding, -padding - 50, g.getWidth() + padding * 2 + 100, 50)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.parent.on_collide = boundary_collision
 
-  bound = self.collider:addRectangle(g.getWidth(), -padding, 50, g.getHeight() + padding * 2)
+  bound = self.collider:addRectangle(g.getWidth() + padding, -padding, 50, g.getHeight() + padding * 2)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.parent.on_collide = boundary_collision
 
-  bound = self.collider:addRectangle(-padding, g.getHeight(), g.getWidth() + padding * 2, 50)
+  bound = self.collider:addRectangle(-padding, g.getHeight() + padding, g.getWidth() + padding * 2  + 100, 50)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.parent.on_collide = boundary_collision
 
-  bound = self.collider:addRectangle(-padding, -padding, 50, g.getHeight() + padding * 2)
+  bound = self.collider:addRectangle(-padding - 50, -padding, 50, g.getHeight() + padding * 2)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.parent.on_collide = boundary_collision

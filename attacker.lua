@@ -83,5 +83,7 @@ function Attacker:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
         end
       end
     end
+  elseif other_object.bound then
+    game.over = true
   end
 end
