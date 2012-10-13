@@ -96,7 +96,18 @@ function Main:mousepressed(x, y, button)
       end
     end
 
-    if on_terrain then
+    local collides_with_other = false
+    for id,tower in pairs(self.towers) do
+      local dist = math.sqrt(math.pow(tower.pos.x - x, 2) + math.pow(tower.pos.y - y, 2))
+      if dist > 25 + 25 then
+        collides_with_other = false
+      else
+        collides_with_other = true
+        break
+      end
+    end
+
+    if on_terrain and not collides_with_other then
       local new_tower = self.active_tower:new(x, y)
       self.towers[new_tower.id] = new_tower
     end
