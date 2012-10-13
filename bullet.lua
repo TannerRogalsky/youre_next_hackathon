@@ -7,7 +7,7 @@ function Bullet:initialize(origin, angle, damage)
   self.pos.incr = function(self, k, v) self[k] = self[k] + v end
   self.radius = 3
   self.angle = angle
-  self.speed = 25
+  self.speed = 15
   self.damage = damage
 
   self._physics_body = game.collider:addPoint(self.pos.x, self.pos.y)
@@ -22,8 +22,10 @@ function Bullet:update(dt)
 end
 
 function Bullet:render()
-  g.setColor(0,255,0)
-  g.circle("fill", self.pos.x, self.pos.y, self.radius)
+  g.setColor(255,255,255)
+  g.draw(game.photon, self.pos.x - 9, self.pos.y - 9)
+  -- g.setColor(0,255,0)
+  -- g.circle("fill", self.pos.x, self.pos.y, self.radius)
 
   -- g.setColor(0,0,0,255)
   -- local x = self.pos.x + self.radius * math.cos(self.angle)

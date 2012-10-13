@@ -11,6 +11,7 @@ function Main:enteredState()
   self.terrain = {}
 
   self.mutalisk = g.newImage("images/mutalisk.png")
+  self.photon = g.newImage("images/bullet.png")
 
   self.bank = 10
   self.attacker_hp = 10
