@@ -1,4 +1,5 @@
 Tower = class('Tower', Base)
+Tower.static.COST = 5
 
 function Tower:initialize(x, y)
   Base.initialize(self)
@@ -7,6 +8,7 @@ function Tower:initialize(x, y)
   self.spread = 0
   self.radius = 25
   self.angle = 0
+  self.damage = 5
   self.jobs = {}
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
@@ -17,6 +19,8 @@ function Tower:initialize(x, y)
     self:shoot(self.angle)
   end)
   self.jobs[new_job] = true
+
+  game.bank = game.bank - Tower.COST
 end
 
 function Tower:update(dt)
@@ -40,7 +44,7 @@ function Tower:shoot(angle)
   local angle_of_attack = angle + math.rad(spread)
   local x = self.pos.x + self.radius * math.cos(angle_of_attack)
   local y = self.pos.y + self.radius * math.sin(angle_of_attack)
-  local bullet = Bullet:new({x = x, y = y}, angle_of_attack, 3)
+  local bullet = Bullet:new({x = x, y = y}, angle_of_attack, self.damage)
   game.bullets[bullet.id] = bullet
 end
 

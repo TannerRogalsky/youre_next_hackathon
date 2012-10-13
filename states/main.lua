@@ -6,16 +6,37 @@ function Main:enteredState()
   self.bullets = {}
   self.attackers = {}
 
+  self.bank = 10
+  self.tower_hp = 10
+
   cron.every(2, function()
-    local new_attacker = Attacker:new(Attacker.PATHS[2], 10)
+    local new_attacker = Attacker:new(Attacker.PATHS[2], game.tower_hp)
     table.insert(self.attackers, new_attacker)
     new_attacker.index = #self.attackers
   end)
+  cron.after(15, function()
+    cron.every(2, function()
+      local new_attacker = Attacker:new(Attacker.PATHS[1], game.tower_hp)
+      table.insert(self.attackers, new_attacker)
+      new_attacker.index = #self.attackers
+    end)
+  end)
+  cron.after(30, function()
+    cron.every(2, function()
+      local new_attacker = Attacker:new(Attacker.PATHS[3], game.tower_hp)
+      table.insert(self.attackers, new_attacker)
+      new_attacker.index = #self.attackers
+    end)
+  end)
+  cron.every(25, function() game.tower_hp = game.tower_hp + 5 end)
+
+  self:create_bounds()
 end
 
 function Main:update(dt)
   cron.update(dt)
   self.collider:update(dt)
+
 
   for id,tower in pairs(self.towers) do
     tower:update(dt)
@@ -32,6 +53,8 @@ end
 
 function Main:render()
   camera:set()
+  g.setColor(255,255,255)
+  g.print("Bank: " .. self.bank, 0, 0)
 
   for id,tower in pairs(self.towers) do
     tower:render()
@@ -49,8 +72,10 @@ function Main:render()
 end
 
 function Main:mousepressed(x, y, button)
-  local new_tower = Tower:new(x, y)
-  self.towers[new_tower.id] = new_tower
+  if self.bank >= Tower.COST then
+    local new_tower = Tower:new(x, y)
+    self.towers[new_tower.id] = new_tower
+  end
 end
 
 function Main:mousereleased(x, y, button)
@@ -93,5 +118,37 @@ function Main.on_stop_collide(dt, shape_one, shape_two)
   -- print(tostring(shape_one.parent) .. " stopped colliding with " .. tostring(shape_two.parent))
 end
 
+function Main:create_bounds(padding, collision_callback)
+  padding = padding or 50
+  local boundary_collision = collision_callback or function(self, dt, shape_one, shape_two, mtv_x, mtv_y)
+    -- self is the boundary object (not the physics object)
+    local other_object = shape_two.parent
+
+    if instanceOf(Bullet, other_object) then
+      game.collider:remove(shape_two)
+      game.bullets[other_object.id] = nil
+    end
+  end
+
+  local bound = self.collider:addRectangle(-padding, -padding, g.getWidth() + padding * 2, 50)
+  bound.parent = {bound = true}
+  self.collider:setPassive(bound)
+  bound.parent.on_collide = boundary_collision
+
+  bound = self.collider:addRectangle(g.getWidth(), -padding, 50, g.getHeight() + padding * 2)
+  bound.parent = {bound = true}
+  self.collider:setPassive(bound)
+  bound.parent.on_collide = boundary_collision
+
+  bound = self.collider:addRectangle(-padding, g.getHeight(), g.getWidth() + padding * 2, 50)
+  bound.parent = {bound = true}
+  self.collider:setPassive(bound)
+  bound.parent.on_collide = boundary_collision
+
+  bound = self.collider:addRectangle(-padding, -padding, 50, g.getHeight() + padding * 2)
+  bound.parent = {bound = true}
+  self.collider:setPassive(bound)
+  bound.parent.on_collide = boundary_collision
+end
 
 return Main

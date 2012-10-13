@@ -7,6 +7,7 @@ Attacker.static.PATHS = {
     y = math.sin(dt) * (self.speed * 2) + g.getHeight() / 2
     return x, y
   end,
+  [3] = function(self, dt) return dt * self.speed, g.getHeight() - dt * self.speed end,
 }
 
 function Attacker:initialize(path, hp)
@@ -20,6 +21,7 @@ function Attacker:initialize(path, hp)
   self.path = path
   self.speed = 20
   self.hp = hp
+  self.worth = 1
 
   self._physics_body = game.collider:addCircle(self.pos.x, self.pos.y, self.radius)
   self._physics_body.parent = self
@@ -64,6 +66,7 @@ function Attacker:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
     game.bullets[other_object.id] = nil
     self.hp = self.hp - other_object.damage
     if self.hp <= 0 then
+      game.bank = game.bank + self.worth
       game.collider:remove(shape_one)
 
       -- stupid not being able to use a hash because we need to
