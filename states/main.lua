@@ -12,6 +12,10 @@ function Main:enteredState()
 
   self.mutalisk = g.newImage("images/mutalisk.png")
   self.photon = g.newImage("images/bullet.png")
+  self.background = g.newImage("images/stars1.jpg")
+  self.background:setWrap("repeat", "repeat")
+  local ww,wh,iw,ih = g.getWidth(), g.getHeight(), self.background:getWidth(), self.background:getHeight()
+  self.bg_quad = love.graphics.newQuad(0, 0, ww, wh, iw, ih)
 
   self.bank = 10
   self.attacker_hp = 10
@@ -62,6 +66,9 @@ end
 
 function Main:render()
   camera:set()
+
+  g.setColor(255,255,255)
+  g.drawq(self.background, self.bg_quad, 0, 0)
 
   for _,terrain in ipairs(self.terrain) do
     terrain:render()
